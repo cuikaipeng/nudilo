@@ -1,0 +1,32 @@
+{
+  "name": "Nudilo",
+  "slug": "nudilo",
+  "identifier": "app.callbell.desktop",
+  "version": "0.1.0",
+  "main": ".",
+  "out": "dist",
+  "macos": {
+    "minimumSystemVersion": "12.0"
+  },
+  "windows": {
+    "displayName": "Nudilo",
+    "installDirName": "Nudilo"
+  },
+  "linux": {
+    "webview": false,
+    "comment": "A little nudge from your AI.",
+    "categories": [
+      "Utility"
+    ],
+    "depends": [
+      "libayatana-appindicator3-1",
+      "libegl1",
+      "libgl1"
+    ]
+  },
+  "updates": {
+    "publicKey": "F/eQIXW6pCXJS9oIEAvs9E3ob2ALVAAIAwaRWse44Dc=",
+    "github": "cuikaipeng/nudilo",
+    "deltas": 0
+  }
+}

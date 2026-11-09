@@ -1,0 +1,17 @@
+{
+  "display_information": {
+    "name": "Nudilo",
+    "description": "A little nudge from your AI.",
+    "background_color": "#DC7A65"
+  },
+  "features": {
+    "bot_user": {"display_name": "Nudilo", "always_online": false},
+    "app_home": {
+      "home_tab_enabled": false,
+      "messages_tab_enabled": true,
+      "messages_tab_read_only_enabled": false
+    }
+  },
+  "oauth_config": {"scopes": {"bot": ["chat:write", "im:read", "im:history"]}},
+  "settings": {"socket_mode_enabled": false, "token_rotation_enabled": false}
+}

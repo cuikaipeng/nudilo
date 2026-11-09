@@ -1,0 +1,191 @@
+{
+  "modules": {
+    "github.com/coder/websocket": {
+      "version": "v1.8.15",
+      "license": "ISC"
+    },
+    "github.com/ebitengine/purego": {
+      "version": "v0.11.1",
+      "license": "Apache-2.0 AND BSD-3-Clause"
+    },
+    "github.com/egoist/mygo": {
+      "version": "v0.7.4",
+      "license": "MIT AND Apache-2.0"
+    },
+    "github.com/go-text/typesetting": {
+      "version": "v0.3.5",
+      "license": "(Unlicense OR BSD-3-Clause) AND MIT"
+    },
+    "github.com/tidwall/jsonc": {
+      "version": "v0.3.3",
+      "license": "MIT"
+    },
+    "golang.org/x/image": {
+      "version": "v0.46.0",
+      "license": "BSD-3-Clause"
+    },
+    "golang.org/x/net": {
+      "version": "v0.62.0",
+      "license": "BSD-3-Clause"
+    },
+    "golang.org/x/text": {
+      "version": "v0.43.0",
+      "license": "BSD-3-Clause"
+    },
+    "google.golang.org/protobuf": {
+      "version": "v1.36.12",
+      "license": "BSD-3-Clause"
+    }
+  },
+  "components": [
+    {
+      "name": "Kivrix reference code and workflows",
+      "license": "MIT",
+      "source": "https://github.com/cuikaipeng/kivrix/blob/b6ef5b0e3afee3400a2561db2adf0b7a4d821eeb/LICENSE",
+      "files": [
+        "third_party/licenses/kivrix.txt"
+      ],
+      "notes": "Desktop layout, local credential storage, update flow, release and license-review workflows reference Kivrix. Its copyright and MIT permission notice are retained."
+    },
+    {
+      "name": "Semi Design — Feishu/Lark artwork",
+      "license": "MIT",
+      "source": "https://github.com/DouyinFE/semi-design/blob/b1cea33ce3112ecfed740ff853e903ef84fed414/LICENSE",
+      "files": [
+        "third_party/licenses/semi-icons.txt"
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Ant Design Icons — DingTalk artwork",
+      "license": "MIT",
+      "source": "https://github.com/ant-design/ant-design-icons/blob/7f2516ac91226d2b41f93b35cb5197c8d94f7189/LICENSE",
+      "files": [
+        "third_party/licenses/ant-design-icons.txt"
+      ],
+      "notes": ""
+    },
+    {
+      "name": "SVG Logos — Slack and Telegram artwork",
+      "license": "CC0-1.0",
+      "source": "https://github.com/gilbarbara/logos/blob/22f03ffc4a652309d1fea4ade70f46e9e1d6602c/LICENSE.txt",
+      "files": [
+        "third_party/licenses/svg-logos.txt"
+      ],
+      "notes": "CC0 covers the upstream artwork contribution to the extent of its rights; it does not grant service owners’ trademark rights or imply endorsement."
+    },
+    {
+      "name": "MingCute — MyGo search icon",
+      "license": "Apache-2.0",
+      "source": "https://github.com/mingcute-design/mingcute-icons/blob/9dc7d3ad074fb16477096a6a8109a6467d0e2fe3/LICENSE",
+      "files": [
+        "third_party/licenses/mingcute.txt"
+      ],
+      "notes": "MyGo ui/combobox.go attributes its search icon to MingCute; the Apache license is retained separately from MyGo’s MIT license."
+    },
+    {
+      "name": "Unicode CLDR 48.2.0 data",
+      "license": "Unicode-3.0",
+      "source": "https://github.com/unicode-org/cldr-json/blob/bb334e8d6250c9363e957e131bf7e6d08ec72f91/LICENSE",
+      "files": [
+        "third_party/licenses/unicode-cldr.txt"
+      ],
+      "notes": "Generated CLDR tables in MyGo i18n/tables.go and i18n/format_tables.go. Unicode’s original copyright notice is unchanged."
+    },
+    {
+      "name": "Unicode character data",
+      "license": "Unicode-3.0",
+      "source": "https://www.unicode.org/license.txt",
+      "files": [
+        "third_party/licenses/unicode-data.txt"
+      ],
+      "notes": "Unicode data referenced by text/language dependencies; snapshot retrieved 2026-11-05."
+    },
+    {
+      "name": "FreeType-derived font routines",
+      "license": "FTL",
+      "source": "https://github.com/freetype/freetype/blob/c4a3c188e82bc5b457390a87630ac782316421a1/docs/FTL.TXT",
+      "files": [
+        "third_party/licenses/freetype.txt",
+        "third_party/licenses/freetype-attribution.txt"
+      ],
+      "notes": "go-text/typesetting font/renderer.go identifies a FreeType adaptation. Portions of this software are copyright © 2005-2026 The FreeType Project (https://freetype.org/). All rights reserved. Nudilo elects the FreeType License (FTL) for this attribution, not the alternative GPL license; the go-text upstream file license notices are retained too."
+    },
+    {
+      "name": "Public Suffix List data",
+      "license": "MPL-2.0",
+      "source": "https://github.com/publicsuffix/list/blob/d6c92f1bbb7433e5db7b8405c25d4035fb8ff376/LICENSE",
+      "files": [
+        "third_party/licenses/public-suffix-list.txt"
+      ],
+      "notes": "Windows dependency golang.org/x/net/publicsuffix embeds a list derived from revision d6c92f1bbb7433e5db7b8405c25d4035fb8ff376. The original MPL-2.0 source data is bundled in third-party-sources/public_suffix_list.dat. Generator and Go representation: https://go.googlesource.com/net/+/refs/tags/v0.62.0/publicsuffix/ . Nudilo does not modify the list. The MPL applies to this component, not Nudilo’s separate MIT code."
+    },
+    {
+      "name": "NSIS 3.13 Windows installer components",
+      "license": "Zlib AND bzip2-1.0.6 AND CPL-1.0",
+      "source": "https://github.com/NSIS-Dev/nsis/blob/a4ba28e60bd9e7c271cd2bfc1558889ce3355653/COPYING",
+      "files": [
+        "third_party/licenses/nsis.txt"
+      ],
+      "notes": "Windows installers and uninstallers use NSIS; MyGo selects LZMA compression. The complete, unmodified NSIS 3.13 source is supplied in third-party-sources/nsis-3.13-source.tar.gz, including the LZMA decoder and its CPL-1.0 terms. Source: https://github.com/NSIS-Dev/nsis/tree/a4ba28e60bd9e7c271cd2bfc1558889ce3355653. These licenses apply to NSIS components, not the installed Nudilo application. Any different terms offered by Nudilo are offered by Nudilo alone, not by NSIS contributors."
+    },
+    {
+      "name": "Feishu/Lark Go SDK — wire protocol reference",
+      "license": "MIT",
+      "source": "https://github.com/larksuite/oapi-sdk-go/blob/db9f52d0a88e3f5e4ed81bb34d71a28e3f5608fa/LICENSE",
+      "files": [
+        "third_party/licenses/larksuite-sdk.txt"
+      ],
+      "notes": "The SDK is not a Go dependency or bundled client. Nudilo’s small pairing adapter follows its public wire format; upstream copyright and license are retained as reference provenance."
+    },
+    {
+      "name": "DingTalk Stream Go SDK — protocol reference",
+      "license": "MIT",
+      "source": "https://github.com/open-dingtalk/dingtalk-stream-sdk-go/blob/d8d6e1f19d68b231c1514fdac973d866a2882b93/LICENSE",
+      "files": [
+        "third_party/licenses/dingtalk-sdk.txt"
+      ],
+      "notes": "The SDK is not a Go dependency or bundled client. The public Stream protocol informed Nudilo’s pairing adapter; upstream copyright and license are retained as reference provenance."
+    }
+  ],
+  "assets": [
+    {
+      "file": "internal/desktop/assets/channels/slack.svg",
+      "source": "https://github.com/gilbarbara/logos/blob/22f03ffc4a652309d1fea4ade70f46e9e1d6602c/logos/slack-icon.svg",
+      "source_sha256": "cf3c36c4ec98189ac7195410f0b93839b33527a71d023b69960d95129a4532a2",
+      "adaptation": "None."
+    },
+    {
+      "file": "internal/desktop/assets/channels/telegram.svg",
+      "source": "https://github.com/gilbarbara/logos/blob/22f03ffc4a652309d1fea4ade70f46e9e1d6602c/logos/telegram.svg",
+      "source_sha256": "9744d0980f9276493d459b6dd0aac472687b38f4896ea8c68f42d7d492306575",
+      "adaptation": "None."
+    },
+    {
+      "file": "internal/desktop/assets/channels/feishu.svg",
+      "source": "https://github.com/DouyinFE/semi-design/blob/b1cea33ce3112ecfed740ff853e903ef84fed414/packages/semi-icons/src/svgs/feishu_logo.svg",
+      "source_sha256": "5f9a5066c702ada4acdb752521a7d70293fbe5166ac4a7fa256cff8778670e2d",
+      "adaptation": "Explicit fills #00D6B9, #133C9A and #3370FF; geometry unchanged. Also used for Lark."
+    },
+    {
+      "file": "internal/desktop/assets/channels/dingtalk.svg",
+      "source": "https://github.com/ant-design/ant-design-icons/blob/7f2516ac91226d2b41f93b35cb5197c8d94f7189/packages/icons-svg/svg/outlined/dingtalk.svg",
+      "source_sha256": "3d27faad2720e1e7a9493b5539dbf357e3b33f2f1d7e4c2e81bfa8f2ccc4078e",
+      "adaptation": "Explicit currentColor fill; geometry unchanged."
+    }
+  ],
+  "bundled_sources": [
+    "third_party/sources/public_suffix_list.dat",
+    "third_party/sources/nsis-3.13-source.tar.gz"
+  ],
+  "installer_tools": {
+    "nsis": {
+      "version": "3.13",
+      "sha256": "ba63dffc4410ee89193e1cb5a41989991bd77c61068da17e3156d136b7b0b3d8",
+      "urls": [
+        "https://github.com/egoist/mygo/releases/download/nsis-3.13/nsis-3.13.zip",
+        "https://downloads.sourceforge.net/project/nsis/NSIS%203/3.13/nsis-3.13.zip"
+      ]
+    }
+  }
+}

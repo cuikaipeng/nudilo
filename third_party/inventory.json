@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "go_version": "go1.27.3",
+  "targets": [
+    "darwin/amd64",
+    "darwin/arm64",
+    "windows/amd64",
+    "linux/amd64",
+    "linux/arm64"
+  ],
+  "selected_module_graph": {
+    "github.com/coder/websocket": "v1.8.15",
+    "github.com/ebitengine/purego": "v0.11.1",
+    "github.com/egoist/mygo": "v0.7.4",
+    "github.com/go-text/typesetting": "v0.3.5",
+    "github.com/go-text/typesetting-utils": "v0.0.0-20260419141703-4ffe8874dabc",
+    "github.com/golang/protobuf": "v1.5.0",
+    "github.com/google/go-cmp": "v0.7.0",
+    "github.com/hajimehoshi/go-mp3": "v0.3.4",
+    "github.com/jfreymuth/oggvorbis": "v1.0.5",
+    "github.com/jfreymuth/vorbis": "v1.0.2",
+    "github.com/tidwall/jsonc": "v0.3.3",
+    "golang.org/x/crypto": "v0.58.0",
+    "golang.org/x/image": "v0.46.0",
+    "golang.org/x/mod": "v0.41.0",
+    "golang.org/x/net": "v0.62.0",
+    "golang.org/x/sync": "v0.24.0",
+    "golang.org/x/sys": "v0.49.0",
+    "golang.org/x/term": "v0.47.0",
+    "golang.org/x/text": "v0.43.0",
+    "golang.org/x/tools": "v0.51.0",
+    "google.golang.org/protobuf": "v1.36.12"
+  },
+  "compiled_modules": [
+    {
+      "path": "github.com/coder/websocket",
+      "version": "v1.8.15",
+      "license": "ISC",
+      "upstream_files": {
+        "LICENSE.txt": "cc0975a5f6305145bdd7b41ce9479632fdac3870e6ac4281f28017f18c767c4e"
+      },
+      "copy": "third_party/licenses/modules/github.com_coder_websocket_v1.8.15.txt"
+    },
+    {
+      "path": "github.com/ebitengine/purego",
+      "version": "v0.11.1",
+      "license": "Apache-2.0 AND BSD-3-Clause",
+      "upstream_files": {
+        "LICENSE": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+      },
+      "copy": "third_party/licenses/modules/github.com_ebitengine_purego_v0.11.1.txt"
+    },
+    {
+      "path": "github.com/egoist/mygo",
+      "version": "v0.7.4",
+      "license": "MIT AND Apache-2.0",
+      "upstream_files": {
+        "LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "internal/shader/LICENSE": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+        "packages/cli/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "packages/cli/npm/darwin-arm64/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "packages/cli/npm/darwin-x64/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "packages/cli/npm/linux-arm64/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "packages/cli/npm/linux-x64/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "packages/cli/npm/win32-arm64/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "packages/cli/npm/win32-x64/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "packages/runtime/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "plugins/fetch/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "plugins/loading/NOTICE.md": "181b45ef8039bdc3a938c013a0896f02cdd6cf703caaf26bf192d8ea36ac5986",
+        "plugins/sqlite/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "plugins/watch/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4",
+        "plugins/websocket/LICENSE": "f0b56f4ab53beb6e18c5e155219c2e2b6000b5475c0ae3ddb3af3894fd9349b4"
+      },
+      "copy": "third_party/licenses/modules/github.com_egoist_mygo_v0.7.4.txt"
+    },
+    {
+      "path": "github.com/go-text/typesetting",
+      "version": "v0.3.5",
+      "license": "(Unlicense OR BSD-3-Clause) AND MIT",
+      "upstream_files": {
+        "LICENSE": "6b1bf94c77d7faa0ce94f8745595bfaf4c404f8b3873f5c2ce55ca15f8e44eca",
+        "font/testdata/OFL.txt": "b8cb059605ed384a35d449bf50a8f7c0e3cd0b752e5289e6c2e9ce0d2d04ac30",
+        "harfbuzz/LICENSE": "e45d96558ba3d406f95dffed6f22c3be07093475ef617bcfddf88444d6b66788"
+      },
+      "copy": "third_party/licenses/modules/github.com_go-text_typesetting_v0.3.5.txt"
+    },
+    {
+      "path": "github.com/tidwall/jsonc",
+      "version": "v0.3.3",
+      "license": "MIT",
+      "upstream_files": {
+        "LICENSE": "5892c55556c6ce088bfee532cdda662f1ccb8ae2be0e2f91999c9c37d3f294eb"
+      },
+      "copy": "third_party/licenses/modules/github.com_tidwall_jsonc_v0.3.3.txt"
+    },
+    {
+      "path": "golang.org/x/image",
+      "version": "v0.46.0",
+      "license": "BSD-3-Clause",
+      "upstream_files": {
+        "LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+        "PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+      },
+      "copy": "third_party/licenses/modules/golang.org_x_image_v0.46.0.txt"
+    },
+    {
+      "path": "golang.org/x/net",
+      "version": "v0.62.0",
+      "license": "BSD-3-Clause",
+      "upstream_files": {
+        "LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+        "PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+      },
+      "copy": "third_party/licenses/modules/golang.org_x_net_v0.62.0.txt"
+    },
+    {
+      "path": "golang.org/x/text",
+      "version": "v0.43.0",
+      "license": "BSD-3-Clause",
+      "upstream_files": {
+        "LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+        "PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+      },
+      "copy": "third_party/licenses/modules/golang.org_x_text_v0.43.0.txt"
+    },
+    {
+      "path": "google.golang.org/protobuf",
+      "version": "v1.36.12",
+      "license": "BSD-3-Clause",
+      "upstream_files": {
+        "LICENSE": "4835612df0098ca95f8e7d9e3bffcb02358d435dbb38057c844c99d7f725eb20",
+        "PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+      },
+      "copy": "third_party/licenses/modules/google.golang.org_protobuf_v1.36.12.txt"
+    }
+  ],
+  "files": {
+    "@go/LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+    "@go/PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc",
+    "@go/src/crypto/internal/boring/LICENSE": "56210f826b8f0fbac3160dfe55c97f4019eb6cdda3963b5a0eab8a8bdb62360e",
+    "@go/src/vendor/golang.org/x/crypto/LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+    "@go/src/vendor/golang.org/x/crypto/PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc",
+    "@go/src/vendor/golang.org/x/net/LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+    "@go/src/vendor/golang.org/x/net/PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc",
+    "@go/src/vendor/golang.org/x/sys/LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+    "@go/src/vendor/golang.org/x/sys/PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc",
+    "@go/src/vendor/golang.org/x/text/LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+    "@go/src/vendor/golang.org/x/text/PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc",
+    "LICENSE": "2869b07e58badee642accfff2d3f98403cc1763a35f583b248fec4ddc5db9063",
+    "internal/desktop/assets/channels/dingtalk.svg": "9b5ec644d6e2f84bc6dd5a23e16444d67641dfcb063fb9ccd43f4abc566ebf3a",
+    "internal/desktop/assets/channels/feishu.svg": "bf2fdbcdaab1f104ed0114980a4d2dfbdcd44e79ce6e7aac9fd4c7d7393e4549",
+    "internal/desktop/assets/channels/slack.svg": "cf3c36c4ec98189ac7195410f0b93839b33527a71d023b69960d95129a4532a2",
+    "internal/desktop/assets/channels/telegram.svg": "9744d0980f9276493d459b6dd0aac472687b38f4896ea8c68f42d7d492306575",
+    "third_party/components.json": "ab830298b1b637a4f6cf2c6a41ec26f71cb99b289336b0ec055c381a6acdca3c",
+    "third_party/licenses/ant-design-icons.txt": "5d367fb0a07340571542eb4ee8eb1add62d37b71bad6786a57c2e9a86bf76c70",
+    "third_party/licenses/dingtalk-sdk.txt": "d4560b1cd75490afdef0f84a710745c7be714402e67922cd8cdf196ac2ab13b7",
+    "third_party/licenses/freetype-attribution.txt": "0ad60949f80314769b74cc0a3af9bfc8e319a4124a954aa0d143f5d92ef8430a",
+    "third_party/licenses/freetype.txt": "5a5ee54c5001bbad1cdc1a57cc3dd4c42199b2da09d39c7ee41fab002d02967f",
+    "third_party/licenses/kivrix.txt": "2e3c656c4d273188091c1a3f146ee9450d303073454d20c01616ac1a96d26c39",
+    "third_party/licenses/larksuite-sdk.txt": "29d16ac53b7f3f8513fb4c6ca4e683bed3f958f9a53f27cb0a840b4f07c5f5b4",
+    "third_party/licenses/mingcute.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "third_party/licenses/modules/github.com_coder_websocket_v1.8.15.txt": "d9447d51f8bd4ce29c6966e3feb0086d58cd4b53aa04f84da2baf4c603125fae",
+    "third_party/licenses/modules/github.com_ebitengine_purego_v0.11.1.txt": "033966d60c0ddc73289018202c348bcd21f21e653642aee9430bdc595c74fea1",
+    "third_party/licenses/modules/github.com_egoist_mygo_v0.7.4.txt": "d17c39d9f2749176aa886141b1dc2caff03b6044c3f4f385d3635015ab9623ba",
+    "third_party/licenses/modules/github.com_go-text_typesetting_v0.3.5.txt": "f13f1e05afb9702fadf68018e2f99d689912e54fdc2e0947e4f1e451cded5252",
+    "third_party/licenses/modules/github.com_tidwall_jsonc_v0.3.3.txt": "12f7017d847033630983e4cfb8758f0db95c2f7cc76404295d30081ff61378bb",
+    "third_party/licenses/modules/golang.org_x_image_v0.46.0.txt": "770b4b3fb5aa0b3199db9c8948e055d03e746eac2be8fbf6f05ce40e1b97e4b5",
+    "third_party/licenses/modules/golang.org_x_net_v0.62.0.txt": "fa7a0d2d292a9feb627f8b616e8422590d38d70b85c0a1960e87d7a2ea3279f0",
+    "third_party/licenses/modules/golang.org_x_text_v0.43.0.txt": "bc018f186a6464201d13fea16eace343dd9b276a0379b02073eab9378a717fac",
+    "third_party/licenses/modules/google.golang.org_protobuf_v1.36.12.txt": "008b98e29e3b688f9de4486b64bcf3a43fb19ad89cd3aacb0a027cd373f00558",
+    "third_party/licenses/nsis.txt": "6cc665347be5c84b76bf0fd6f85fbb0c33261e89b3408aa3e3e55dbe95e12d89",
+    "third_party/licenses/public-suffix-list.txt": "66a3107d5ad6a058aab753eaac2047ccb2ed0e39465dd0fe5844da3e300d5172",
+    "third_party/licenses/semi-icons.txt": "2acf865e87e59090121369aac0575467067fdd7999923a70d785a46ceae3330f",
+    "third_party/licenses/svg-logos.txt": "36ffd9dc085d529a7e60e1276d73ae5a030b020313e6c5408593a6ae2af39673",
+    "third_party/licenses/unicode-cldr.txt": "220ba0e1c43b99530d2d5bdb892a99dca0989414f51ab695ecd90163eaa1ec3b",
+    "third_party/licenses/unicode-data.txt": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+    "third_party/sources/nsis-3.13-source.tar.gz": "660c4f684ee4b5879d86e38cc036b7799fc8c077e3691829201802b21a854724",
+    "third_party/sources/public_suffix_list.dat": "a5638281157e8c902b127a5376f9ea2d024bf2ee11524133a6a76cd1d14ee7be"
+  }
+}

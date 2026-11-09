@@ -1,0 +1,19 @@
+FreeType bitmap routine reference
+
+Source: https://github.com/freetype/freetype/blob/c4a3c188e82bc5b457390a87630ac782316421a1/src/sfnt/ttsbit.c
+License: FreeType License (FTL); see freetype.txt.
+
+go-text/typesetting v0.3.5 font/renderer.go identifies an adaptation of
+FreeType's tt_face_load_sbit. It does not pin a FreeType version. The following
+copyright notices are retained from the upstream reference checked during this
+review, alongside go-text's own source-file notices; this does not assert that
+the complete FreeType library is linked into Nudilo.
+
+Copyright (C) 2005-2026 by
+David Turner, Robert Wilhelm, and Werner Lemberg.
+
+Copyright 2013 by Google, Inc.
+Google Author(s): Behdad Esfahbod.
+
+Portions of this software are copyright © 2005-2026 The FreeType Project
+(https://freetype.org/). All rights reserved.
