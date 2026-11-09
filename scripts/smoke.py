@@ -76,6 +76,21 @@ try:
             time.sleep(0.2)
         raise AssertionError("Missing UI text: " + text)
 
+    def scroll_settings(label):
+        def scroll(dy):
+            call("input", {"events": [{"type": "wheel", "x": 600, "y": 300, "dy": dy, "precise": True}]})
+            time.sleep(0.15)
+
+        scroll(-10000)
+        for _ in range(60):
+            matches = [n for n in tree() if n.get("label") == label]
+            if matches:
+                scroll(matches[0]["bounds"]["y"] - 64)
+                tree()
+                return
+            scroll(250)
+        raise AssertionError("Settings section cannot be reached by scrolling: " + label)
+
     wait_for("Listening for Codex" if full else "Get ready in three steps")
     assert call("windows")["windows"][0]["kind"] == "content", "UI is not native"
     captures = Path("build/screenshots")
@@ -109,8 +124,7 @@ try:
     capture("feishu")
 
     press("Settings")
-    press("Jump to")
-    press("Appearance")
+    scroll_settings("Appearance")
     press("Dark")
     wait_for("Dark")
     until = time.monotonic() + 5
@@ -163,10 +177,11 @@ try:
         press(key="pause")
         wait_for("Pause")
         press("Settings")
+        scroll_settings("Codex")
         press("Disconnect")
         wait_for("Nudilo disconnected.")
         assert "callbell-hook" not in (root / "codex" / "hooks.json").read_text()
-        press("Reconnect")
+        press(key="reconnect-settings")
         wait_for("Listening for Codex")
         capture("settings")
     call("menu", {"path": ["File", "Open Nudilo"]})
@@ -189,8 +204,7 @@ try:
     call("menu", {"path": ["File", "Open Nudilo"]})
     assert call("windows")["windows"][0]["visible"], "Window did not reopen"
     press("Settings")
-    press("Jump to")
-    press("Appearance")
+    scroll_settings("Appearance")
     press("Dark")
     press(key="language")
     press("简体中文")
@@ -219,6 +233,7 @@ try:
     stream = sock.makefile("rwb")
     wait_for("概览")
     press("设置")
+    scroll_settings("外观")
     wait_for("简体中文")
     capture("restart-dark-zh")
     print("Native smoke passed: five personal/group channel modes, validation, English/Chinese menus, live light/dark switching, preference persistence after restart and close-to-tray." + (" Codex hooks and background delivery checks also passed." if full else ""))
