@@ -47,13 +47,15 @@ jobs:
             GOOS="${target%/*}" GOARCH="${target#*/}" go build -o "$RUNNER_TEMP/nudilo-check" .
             GOOS="${target%/*}" GOARCH="${target#*/}" go build -o "$RUNNER_TEMP/nudilo-hook-check" ./cmd/callbell-hook
           done
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: Upload optional UI previews
+        uses: actions/upload-artifact@v4
+        if: failure() || github.event_name == 'workflow_dispatch'
+        continue-on-error: true
         with:
           name: ui-previews
           path: build/test-artifacts/
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
 
   package:
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
@@ -95,13 +97,15 @@ jobs:
       - name: Native startup, language and theme smoke
         if: runner.os == 'macOS'
         run: make test-native
-      - uses: actions/upload-artifact@v4
-        if: always() && runner.os == 'macOS'
+      - name: Upload optional native UI previews
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'macOS' && (failure() || github.event_name == 'workflow_dispatch')
+        continue-on-error: true
         with:
           name: native-ui-previews
           path: build/screenshots/
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
       - uses: actions/upload-artifact@v4
         with:
           name: nudilo-${{ matrix.artifact }}

@@ -73,7 +73,11 @@ Update `mygo.json` and `internal/buildinfo/version.go` together.
 Only the release job has repository write permission. Packaging jobs must all
 succeed before asset verification and checksum generation. A publication guard
 runs both before building and before uploading: already published versions are
-never overwritten; draft retries are allowed. Artifacts expire after seven days.
+never overwritten; draft retries are allowed. Installer artifacts expire after
+seven days. Diagnostic UI previews upload only after a failure or during a manual
+workflow, expire after three days, and do not fail the job if upload is unavailable
+(for example, when the account's artifact storage quota is full). Installer uploads
+remain required; a release cannot proceed without them.
 
 Review the bilingual draft notes, install and launch on each target, and
 publish the draft manually when ready. Editing workflow files locally does not
@@ -131,6 +135,8 @@ PowerShell and Unix shell paths without launching Codex or contacting an IM.
 版本号必须在 `mygo.json` 和 `internal/buildinfo/version.go` 中一致；版本标签
 触发三平台构建、产物检查和校验和生成，最终只创建草稿，不自动公开发布。
 正式发布前核对双语说明并完成各系统安装检查。已公开版本禁止覆盖。
+安装包附件保留七天。界面预览仅在检查失败或手动运行时上传，保留三天；
+预览上传失败（例如账户附件存储配额已满）不会影响检查结果，安装包上传仍是必需步骤。
 `make check` 和打包前均检查许可清单；所有安装包附带完整许可、Public Suffix List
 原始数据和 NSIS 源码。Windows 安装器固定为与源码对应的 NSIS 3.13，资源核对不能
 替代最终的 Windows 安装验证。依赖升级流程见[中文许可检查](LICENSING.zh-CN.md)。

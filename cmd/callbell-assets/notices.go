@@ -100,9 +100,13 @@ func goOutput(target string, args ...string) ([]byte, error) {
 		parts := strings.Split(target, "/")
 		cmd.Env = append(cmd.Env, "GOOS="+parts[0], "GOARCH="+parts[1])
 	}
-	output, err := cmd.CombinedOutput()
+	// Go writes download progress to stderr even when the command succeeds.
+	// Keep it separate from the JSON stream consumed by the license scanner.
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	output, err := cmd.Output()
 	if err != nil {
-		return nil, fmt.Errorf("license dependency scan: %w: %s", err, output)
+		return nil, fmt.Errorf("license dependency scan: %w: %s", err, strings.TrimSpace(stderr.String()))
 	}
 	return output, nil
 }
