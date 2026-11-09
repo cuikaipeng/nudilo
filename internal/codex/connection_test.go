@@ -149,8 +149,12 @@ func TestHookCommandPreservesUTF8(t *testing.T) {
 		t.Fatal(err)
 	}
 	cmd.Stdin = bytes.NewReader(payload)
-	if output, err := cmd.CombinedOutput(); err != nil || strings.TrimSpace(string(output)) != "{}" {
-		t.Fatalf("wrapper failed or changed hook response: %v %q", err, output)
+	// PowerShell can write first-use module progress to stderr. Only stdout
+	// is the hook protocol; keep diagnostics available if the command fails.
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	if output, err := cmd.Output(); err != nil || strings.TrimSpace(string(output)) != "{}" {
+		t.Fatalf("wrapper failed or changed hook response: %v; stdout %q; stderr %q", err, output, stderr.String())
 	}
 	files, err := os.ReadDir(paths.Inbox())
 	if err != nil || len(files) != 1 {
