@@ -3,7 +3,6 @@ name: Build and release
 on:
   push:
     branches: [main, dev]
-    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -16,12 +15,14 @@ env:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.event_name != 'workflow_dispatch' }}
 
 jobs:
   checks:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -31,12 +32,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: python3 scripts/release.py check
-      - name: Refuse to replace a published release
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Read release version
+        id: version
+        run: python3 scripts/release.py check --github-output "$GITHUB_OUTPUT"
+      - name: Check version before merging or releasing main
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.base_ref == 'main')
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/release.py guard --tag "$GITHUB_REF_NAME"
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_COMMIT: ${{ github.event_name == 'push' && github.sha || '' }}
+        run: python3 scripts/release.py guard --tag "$RELEASE_TAG" --commit "$RELEASE_COMMIT"
       - run: make check
       - run: make race
       - name: Compile all desktop architectures
@@ -58,7 +63,7 @@ jobs:
           retention-days: 3
 
   package:
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: checks
     timeout-minutes: 45
     strategy:
@@ -117,12 +122,16 @@ jobs:
           compression-level: 0
 
   release:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    needs: package
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [checks, package]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ needs.checks.outputs.tag }}
+      RELEASE_COMMIT: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -138,17 +147,21 @@ jobs:
           path: artifacts
           merge-multiple: true
       - run: python3 scripts/release.py verify artifacts
-      - name: Recheck publication state
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/release.py guard --tag "$GITHUB_REF_NAME"
+      - name: Recheck version and tag this main commit
+        run: python3 scripts/release.py prepare-tag --tag "$RELEASE_TAG" --commit "$RELEASE_COMMIT"
       - name: Prepare bilingual release notes
         run: python3 scripts/release_notes.py > build-release-notes.md
-      - uses: softprops/action-gh-release@v2
+      - name: Upload all verified assets to a draft
+        uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          target_commitish: ${{ env.RELEASE_COMMIT }}
+          name: ${{ env.RELEASE_TAG }}
           files: artifacts/*
           body_path: build-release-notes.md
           fail_on_unmatched_files: true
           generate_release_notes: false
           draft: true
           prerelease: false
+      - name: Verify uploaded assets and publish
+        run: python3 scripts/release.py publish --tag "$RELEASE_TAG" --commit "$RELEASE_COMMIT" artifacts

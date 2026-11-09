@@ -85,8 +85,8 @@ Local packaging reads the key in this order:
 For GitHub Actions, set the repository Actions secret
 **`MYGO_UPDATER_PRIVATE_KEY`** to this key's contents. The packaging job already
 reads that secret. PR checks require no key; release packaging fails clearly
-when the matching key is missing. This implementation does not upload the key
-or publish the repository/release.
+when the matching key is missing. The private key is never included in release
+assets. Once configured, pushes to `main` can publish signed updates automatically.
 
 Forks must use their own key and repository. Generate a key with
 `go tool mygo keygen -o /a/private/directory`, update `updates.publicKey` and
@@ -96,13 +96,18 @@ sync. Existing Nudilo installations will not trust that fork's key.
 ## Publish an update
 
 1. Configure the repository secret once and back up the key.
-2. Update the version in `mygo.json` and `internal/buildinfo/version.go` together.
-3. Run `make check`, then package all platforms. Local packaging uses the same
-   pipeline as CI and does not replace a running app.
-4. A matching `vX.Y.Z` tag creates a **draft** release. Verify the final packages
-   on their target systems and publish the draft when ready. GitHub must make
-   the repository/release publicly downloadable for the anonymous app feed.
-5. Publish every platform's installer, signed archive and manifest together.
+2. Work on `dev`. Update the version in `mygo.json` and
+   `internal/buildinfo/version.go` together to a higher stable version.
+3. Run `make check`. Use a manual Actions run on `dev` to package all platforms
+   without publishing, and test the final packages on their target systems.
+   Local packaging uses the same pipeline and does not replace a running app.
+4. Review the bilingual release notes, then merge the `dev` → `main` release PR.
+   CI checks the version, builds every platform, verifies signatures, creates
+   `vX.Y.Z` at that exact `main` commit, and uploads all assets to a draft. Once
+   the uploaded files pass size and SHA-256 checks, CI automatically publishes
+   the stable release as latest. There is no manual tagging or publication step.
+   The repository/release must be publicly downloadable for the anonymous app feed.
+5. Every platform's installer, signed archive and manifest is published together.
    The manifest names are fixed: `update-darwin-universal.json`,
    `update-windows-amd64.json`, `update-linux-amd64.json` and
    `update-linux-arm64.json`. Archives use
@@ -113,6 +118,9 @@ versions and sizes, compares app/helper bytes with installer staging, and
 verifies notice/source resources inside update archives. Missing or tampered
 updates fail the build. `SHA256SUMS` covers installers and update assets.
 Deltas are disabled for now, so each update is a complete signed archive.
+Ordinary `dev` pushes and PRs only run checks. Published versions cannot be
+overwritten or replaced by an older version; incomplete uploads stay as drafts.
+See [release workflow and retries](RELEASING.md#version-and-github-workflow).
 
 The initial 0.1.0 package establishes the key/feed. An installation will only
 offer a release with a **higher version**. Before a public release is present,

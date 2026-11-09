@@ -2,8 +2,8 @@
 """Nudilo packaging and release checks, using the standard library and pinned MyGo.
 
 Workflow inspired by Kivrix (MIT); see third_party/licenses/kivrix.txt.
-Builds are isolated from the working tree. Publishing is handled by GitHub's
-release job and always creates a draft.
+Builds are isolated from the working tree. The main-branch release job stages a
+draft and publishes it only after all uploaded assets have been verified.
 """
 import argparse
 import base64
@@ -29,6 +29,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parent.parent
 TARGETS = ('darwin/universal', 'windows/amd64', 'linux/amd64', 'linux/arm64')
 ASSETS = ('icon.png', 'logo.png', 'tray.png', 'tray-color.png', 'THIRD_PARTY_NOTICES.txt')
+VERSION_PATTERN = r'(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)'
 
 
 def require(condition, message):
@@ -39,7 +40,7 @@ def require(condition, message):
 def config(tag=''):
     cfg = json.loads((ROOT / 'mygo.json').read_text(encoding='utf-8'))
     version = cfg['version']
-    require(re.fullmatch(r'(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)', version), 'Use a stable X.Y.Z version.')
+    require(re.fullmatch(VERSION_PATTERN, version), 'Use a stable X.Y.Z version.')
     code = (ROOT / 'internal/buildinfo/version.go').read_text(encoding='utf-8')
     match = re.search(r'const Version = "([^"]+)"', code)
     require(match and match[1] == version, 'mygo.json and internal/buildinfo/version.go must match.')
@@ -91,23 +92,104 @@ def verify_update_signatures(directory, targets=TARGETS):
     run('go', 'run', './cmd/nudilo-release', '-directory', str(directory.resolve()), '-platform', ','.join(targets), cwd=ROOT)
 
 
-def guard(tag):
-    config(tag)
+def github_api(path, *, method='GET', data=None, missing_ok=False):
     repo = os.environ['GITHUB_REPOSITORY']
     require(re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repo), 'Invalid repository name.')
-    url = f'https://api.github.com/repos/{repo}/releases/tags/{urllib.parse.quote(tag, safe="")}'
-    request = urllib.request.Request(url, headers={
+    url = f'https://api.github.com/repos/{repo}/{path}'
+    request = urllib.request.Request(url, method=method, data=None if data is None else json.dumps(data).encode(), headers={
         'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
         'Accept': 'application/vnd.github+json', 'User-Agent': 'nudilo-release',
+        'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28',
     })
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
-            release = json.load(response)
+            return json.load(response)
     except urllib.error.HTTPError as error:
-        if error.code == 404:
-            return
+        if missing_ok and method == 'GET' and error.code == 404:
+            return None
         raise
-    require(release.get('draft') is True, f'{tag} is already published. Use a new version.')
+
+
+def github_list(path):
+    items = []
+    page = 1
+    while True:
+        batch = github_api(f'{path}?per_page=100&page={page}')
+        require(isinstance(batch, list), f'Expected a list from GitHub: {path}')
+        items.extend(batch)
+        if len(batch) < 100:
+            return items
+        page += 1
+
+
+def tag_commit(tag):
+    reference = github_api('git/ref/tags/' + urllib.parse.quote(tag, safe=''), missing_ok=True)
+    if reference is None:
+        return None
+    obj = reference['object']
+    # Existing releases may use annotated tags; compare the underlying commit.
+    for _ in range(10):
+        if obj['type'] == 'commit':
+            return obj['sha']
+        require(obj['type'] == 'tag', f'{tag} does not point to a commit.')
+        obj = github_api('git/tags/' + obj['sha'])['object']
+    raise ValueError(f'{tag} has too many nested annotated tags.')
+
+
+def guard(tag, commit=''):
+    version = tuple(map(int, config(tag)['version'].split('.')))
+    releases = github_list('releases')
+    matches = [item for item in releases if item['tag_name'] == tag]
+    require(all(item.get('draft') is True for item in matches), f'{tag} is already published. Use a new version.')
+    require(len(matches) <= 1, f'Multiple drafts exist for {tag}; keep only the intended draft.')
+    for item in releases:
+        match = re.fullmatch('v' + VERSION_PATTERN, item['tag_name'])
+        if match and not item['draft'] and not item['prerelease']:
+            require(version > tuple(map(int, match.groups())), f'Version must be newer than published {item["tag_name"]}.')
+    existing = tag_commit(tag)
+    if existing is not None:
+        require(commit and existing == commit, f'{tag} already exists for another commit. Use a new version.')
+    draft = matches[0] if matches else None
+    if draft:
+        require(existing and existing == commit, f'{tag} draft must have a tag pointing to the same commit before retrying.')
+    return draft, existing
+
+
+def require_main_push(commit):
+    require(os.environ.get('GITHUB_EVENT_NAME') == 'push' and os.environ.get('GITHUB_REF') == 'refs/heads/main',
+            'Releases may only be published by a push to main.')
+    require(re.fullmatch(r'[0-9a-f]{40}', commit) and commit == os.environ.get('GITHUB_SHA'),
+            'Release commit must equal this main workflow commit.')
+    require(os.environ.get('GITHUB_REPOSITORY') == config()['updates']['github'],
+            'Release repository must match the configured update feed.')
+
+
+def prepare_tag(tag, commit):
+    require_main_push(commit)
+    _, existing = guard(tag, commit)
+    if existing is None:
+        github_api('git/refs', method='POST', data={'ref': 'refs/tags/' + tag, 'sha': commit})
+    print(f'Release tag: {tag} at {commit}')
+
+
+def publish(tag, commit, directory):
+    require_main_push(commit)
+    verify_assets(directory)
+    draft, existing = guard(tag, commit)
+    require(draft and existing == commit, f'Expected a draft for {tag} at {commit}.')
+    assets = github_list(f'releases/{draft["id"]}/assets')
+    files = {p.name: p for p in directory.iterdir() if p.is_file()}
+    require(len(assets) == len(files) and {a['name'] for a in assets} == set(files),
+            'Uploaded release assets do not match the verified local assets.')
+    for asset in assets:
+        path = files[asset['name']]
+        require(asset['state'] == 'uploaded' and asset['size'] == path.stat().st_size
+                and asset.get('digest') == 'sha256:' + digest(path),
+                f'Uploaded asset failed size/SHA-256 verification: {path.name}')
+    result = github_api(f'releases/{draft["id"]}', method='PATCH', data={'draft': False, 'prerelease': False, 'make_latest': 'true'})
+    require(result['tag_name'] == tag and result['draft'] is False and result['prerelease'] is False,
+            'GitHub did not confirm a stable published release.')
+    print('Published:', result['html_url'])
 
 
 def run(*args, **kwargs):
@@ -388,15 +470,27 @@ def main():
     sub = parser.add_subparsers(dest='command', required=True)
     check = sub.add_parser('check')
     check.add_argument('--tag', default=os.environ.get('GITHUB_REF_NAME', '') if os.environ.get('GITHUB_REF_TYPE') == 'tag' else '')
-    gate = sub.add_parser('guard'); gate.add_argument('--tag', required=True)
+    check.add_argument('--github-output', type=Path)
+    for command in ('guard', 'prepare-tag', 'publish'):
+        gate = sub.add_parser(command)
+        gate.add_argument('--tag', required=True)
+        gate.add_argument('--commit', required=command != 'guard', default='')
+        if command == 'publish': gate.add_argument('directory', type=Path)
     build = sub.add_parser('package')
     build.add_argument('--platform', required=True)
     build.add_argument('--out', '-o', default='dist')
     build.add_argument('--signed', action='store_true')
     verify = sub.add_parser('verify'); verify.add_argument('directory', type=Path)
     args = parser.parse_args()
-    if args.command == 'check': print('Release version:', config(args.tag)['version'])
-    elif args.command == 'guard': guard(args.tag)
+    if args.command == 'check':
+        version = config(args.tag)['version']
+        if args.github_output:
+            with args.github_output.open('a', encoding='utf-8') as output:
+                output.write(f'version={version}\ntag=v{version}\n')
+        print('Release version:', version)
+    elif args.command == 'guard': guard(args.tag, args.commit)
+    elif args.command == 'prepare-tag': prepare_tag(args.tag, args.commit)
+    elif args.command == 'publish': publish(args.tag, args.commit, args.directory)
     elif args.command == 'package': package(args)
     else: verify_assets(args.directory)
 

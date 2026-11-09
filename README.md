@@ -212,6 +212,11 @@ See [Behavior and data](docs/BEHAVIOR.md) for queue handling, data locations and
 Requires **Go 1.27.3** and **Python 3.9+**. MyGo is pinned to **v0.7.4** in `go.mod`.
 These tools are for development and packaging; installer users do not need them.
 
+Development happens on the default `dev` branch; pushes and PRs run checks only.
+A release PR from `dev` to `main`, with both version files bumped, automatically
+builds, verifies, tags and publishes the new version. See the
+[release workflow](docs/RELEASING.md#version-and-github-workflow).
+
 ```sh
 git clone https://github.com/cuikaipeng/nudilo.git
 cd nudilo

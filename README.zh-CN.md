@@ -180,6 +180,10 @@ sh install.sh
 需要 **Go 1.27.3** 和 **Python 3.9+**，MyGo 固定为 **v0.7.4**。
 这些工具仅供开发与打包使用，下载安装包的用户不需要安装。
 
+日常开发在默认的 `dev` 分支进行，提交和 PR 只运行检查。准备发版时同时提高两个版本
+文件中的版本号，再合并 `dev` → `main` 的发布 PR，即会自动构建、验证、打标签并正式发布。
+详见[发布流程](docs/RELEASING.md#中文摘要)。
+
 ```sh
 git clone https://github.com/cuikaipeng/nudilo.git
 cd nudilo
