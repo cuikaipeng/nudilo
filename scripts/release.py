@@ -333,6 +333,41 @@ def deb_members(path):
     return members
 
 
+def verify_macos_icons(app, approved):
+    plist = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
+    require(plist.get('CFBundleIconFile') == 'Nudilo.icns' and not plist.get('CFBundleIconName'),
+            'The macOS app must use its opaque application icon, not the inset volume icon.')
+    resources = app / 'Contents/Resources'
+    for name, original in (('Nudilo.icns', 'Nudilo.icns'), ('VolumeIcon.icns', 'VolumeIcon.icns'),
+                           ('AppIcon.icns', 'VolumeIcon.icns')):
+        require((resources / name).is_file() and digest(resources / name) == digest(approved / 'darwin' / original),
+                f'Missing or changed macOS icon: {name}')
+
+
+def verify_dmg_icons(dmg, approved):
+    # Verify the actual installer, including MyGo's custom-volume-icon flag.
+    # Mount privately so packaging never opens a Finder window on the host.
+    with tempfile.TemporaryDirectory(prefix='nudilo-dmg-check-') as temp:
+        mount = Path(temp) / 'volume'
+        mount.mkdir()
+        run('hdiutil', 'attach', str(dmg), '-readonly', '-nobrowse', '-noautoopen',
+            '-mountpoint', str(mount), stdout=subprocess.DEVNULL)
+        try:
+            icon = mount / '.VolumeIcon.icns'
+            require(icon.is_file() and digest(icon) == digest(approved / 'darwin/VolumeIcon.icns'),
+                    'DMG must use the rounded, padded volume icon.')
+            finder_info = bytes.fromhex(subprocess.check_output(
+                ['xattr', '-px', 'com.apple.FinderInfo', str(mount)], text=True))
+            require(len(finder_info) >= 10 and struct.unpack_from('>H', finder_info, 8)[0] & 0x0400,
+                    'DMG custom volume icon is not enabled.')
+            verify_macos_icons(mount / 'Nudilo.app', approved)
+        finally:
+            try:
+                run('hdiutil', 'detach', str(mount), stdout=subprocess.DEVNULL)
+            except subprocess.CalledProcessError:
+                run('hdiutil', 'detach', '-force', str(mount), stdout=subprocess.DEVNULL)
+
+
 def verify_package(cfg, target, directory, approved, languages, signed=False):
     version, arch = cfg['version'], target.split('/')[1]
     if target.startswith('darwin/'):
@@ -341,12 +376,14 @@ def verify_package(cfg, target, directory, approved, languages, signed=False):
         require(plist['CFBundleShortVersionString'] == version, 'Wrong macOS version.')
         require(plist['CFBundleLocalizations'] == languages, 'Missing macOS languages.')
         verify_resources(app / 'Contents/Resources', approved)
+        verify_macos_icons(app, approved)
         for file in (app / 'Contents/MacOS/Nudilo', app / 'Contents/Resources/bin/callbell-hook'):
             arches = subprocess.check_output(['lipo', '-archs', str(file)], text=True).split()
             require(set(arches) == {'arm64', 'x86_64'}, f'Not a universal binary: {file}')
         run('codesign', '--verify', '--deep', '--strict', str(app))
         dmg = directory / f'nudilo-{version}.dmg'
         run('hdiutil', 'verify', str(dmg), stdout=subprocess.DEVNULL)
+        verify_dmg_icons(dmg, approved)
         if signed:
             run('xcrun', 'stapler', 'validate', str(dmg))
             run('spctl', '--assess', '--type', 'execute', str(app))

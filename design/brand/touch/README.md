@@ -6,6 +6,20 @@ Mode: built-in image_gen edits. The original 01 / TOUCH concept supplied the sil
 
 Files: `nudilo-app-icon.png`, `nudilo-logo.png`, `nudilo-tray-template.png`, `nudilo-tray-color.png`. All marks have no words. The app icon is fully opaque; the other assets preserve transparency.
 
+The separate `nudilo-volume-icon.png` was added on 2026-11-12 for the ejectable
+macOS installer volume. It has an inset rounded tile with transparent outer
+padding; the four original assets above are unchanged. It was derived using
+built-in `image_gen` from the application original, with a framing edit and
+then a reduction of the coral mark to retain its proportions within the tile.
+The final exported PNG is copied without pixel transformations; ICNS packaging
+only resamples it to the required display sizes.
+
+Final cleanup prompt (built-in edit mode, transparent background):
+
+```text
+Clean up the alpha silhouette of this icon. The rounded warm-white tile is surrounded by unwanted stray white pixels and dark edge traces. Remove ALL of those artifacts. The only non-transparent pixels must be INSIDE one mathematically smooth centered rounded square. Make a crisp flat vector-style tile contour with uniform antialiasing and no dark outlines. Outside this single clean contour there must be absolutely nothing: no flecks, no strokes, no shadow, no halo, no noise. Preserve the exact coral TOUCH symbol, its current size, orientation, proportions and color. Preserve the current centered layout, approximately 78% canvas width for the tile, and generous 11% transparent margin on all four sides. Keep the warm-white fill fully opaque and flat. No text, no shadow, no border, no bevel, no gradients added. A pristine polished production icon on actual transparent background.
+```
+
 ## app
 
 ```text

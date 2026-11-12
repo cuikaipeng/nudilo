@@ -11,11 +11,26 @@ remain the source of truth.
 | [Transparent logo](touch/nudilo-logo.png) | Sidebar and README; no wordmark or slogan inside the image. |
 | [Tray template](touch/nudilo-tray-template.png) | Black and transparent artwork for macOS and Windows. |
 | [Color tray icon](touch/nudilo-tray-color.png) | Coral artwork for Linux AppIndicator. |
+| [Installer volume icon](touch/nudilo-volume-icon.png) | macOS mounted DMG; inset warm-white rounded square with transparent surroundings. |
 
 `cmd/callbell-assets` copies these four files to `resources/icon.png`,
 `resources/logo.png`, `resources/tray.png` and `resources/tray-color.png`.
 The copies are packaging inputs. Keep the approved originals when cleaning
 build output.
+
+For macOS, the same command also encodes `resources/darwin/Nudilo.icns`
+from the opaque application original and `resources/darwin/VolumeIcon.icns`
+from the separate installer artwork, with PNG representations from 32 to
+1024 pixels. The volume tile occupies approximately 78% of the canvas width;
+the transparent padding and rounded corners are part of that image.
+
+MyGo v0.7.4 always copies the bundle's `AppIcon.icns` to the DMG's
+`.VolumeIcon.icns`. `macos.icon` therefore supplies the volume ICNS, and
+`macos.infoPlist.CFBundleIconFile` explicitly selects `Nudilo.icns` for the
+application. This keeps the application's original full-bleed framing while
+giving the ejectable desktop volume its own smaller silhouette. Release
+verification checks both the app and the mounted DMG to catch changes to this
+MyGo behavior. All icon resources are prepared before signing.
 
 The target brand color is coral **#E48A73**, with a light warm-white application
 icon background. These are generated raster assets, so individual pixels vary

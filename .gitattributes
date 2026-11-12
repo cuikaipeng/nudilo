@@ -5,4 +5,5 @@ third_party/sources/** -text -whitespace
 resources/THIRD_PARTY_NOTICES.txt -text -whitespace
 resources/third-party-sources/** -text -whitespace
 *.png binary
+*.icns binary
 *.tar.gz binary

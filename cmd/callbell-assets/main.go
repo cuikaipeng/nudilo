@@ -77,5 +77,5 @@ func brandAssets() error {
 			return err
 		}
 	}
-	return nil
+	return macOSIcons()
 }
